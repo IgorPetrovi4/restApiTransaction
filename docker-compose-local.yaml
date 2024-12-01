@@ -1,0 +1,29 @@
+services:
+  mysql_kasta_db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - ./docker/database:/var/lib/mysql:cached
+    networks:
+      - app-kasta-network
+
+  php_kasta:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/usr/src/app:cached
+      - ./docker/composer/:/.composer
+      - ./docker/php/config/php.ini:/usr/local/etc/php/conf.d/php.ini
+    networks:
+      - app-kasta-network
+
+networks:
+  app-kasta-network:
+    driver: bridge

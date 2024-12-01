@@ -1,0 +1,232 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Kasta Test API",
+    "description": "This is a RESTful API for Kasta Test",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/{user}/limits": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Get user limits",
+        "operationId": "get_app_limit_get",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "path",
+            "description": "The ID of the user",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get user limits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LimitResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/transactions": {
+      "post": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Create new user",
+        "operationId": "post_app_transaction_create",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Returns the current user limits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LimitResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TransactionRequest": {
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "default": 1,
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "default": 0,
+            "nullable": true
+          }
+        },
+        "type": "object"
+      },
+      "LimitResponse": {
+        "required": [
+          "user",
+          "dailyLimit",
+          "dailyTotal",
+          "dailyTotalDate",
+          "monthlyLimit",
+          "monthlyTotal",
+          "monthlyTotalMonth",
+          "message"
+        ],
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "dailyLimit": {
+            "type": "number",
+            "format": "float"
+          },
+          "dailyTotal": {
+            "type": "number",
+            "format": "float"
+          },
+          "dailyTotalDate": {
+            "type": "string"
+          },
+          "monthlyLimit": {
+            "type": "number",
+            "format": "float"
+          },
+          "monthlyTotal": {
+            "type": "number",
+            "format": "float"
+          },
+          "monthlyTotalMonth": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Transactions"
+    }
+  ]
+}
